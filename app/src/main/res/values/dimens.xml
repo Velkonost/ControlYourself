@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_view_padding">4dp</dimen>
+
+    <dimen name="placeholder_height">1dp</dimen>
+    <dimen name="placeholder_width">1dp</dimen>
+
+    <dimen name="divider_width">2dp</dimen>
+    <dimen name="divider_height">2dp</dimen>
+
+    <dimen name="grid_movies_title_padding">10dp</dimen>
+    <dimen name="grid_movies_title_font_size">24sp</dimen>
+    <dimen name="grid_movie_title_font_size">16sp</dimen>
+    <dimen name="grid_movie_director_font_size">14sp</dimen>
+    <dimen name="grid_movie_rating_font_size">12sp</dimen>
+    <dimen name="grid_item_height">150dp</dimen>
+    <dimen name="grid_item_padding">10dp</dimen>
+
+    <dimen name="list_item_title_text_size">20sp</dimen>
+    <dimen name="list_item_author_text_size">12sp</dimen>
+    <dimen name="list_item_cover_height">450dp</dimen>
+    <dimen name="list_item_height">80dp</dimen>
+    <dimen name="list_item_padding">10dp</dimen>
+</resources>

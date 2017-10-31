@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Control Yourself</string>
+    <string name="tap_to_remove">Tap 1 more time to remove</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
+    <string name="h">h </string>
+    <string name="m">m </string>
+    <string name="installed_apps_tab">All</string>
+    <string name="customized_apps_tab">Customized</string>
+
+
+</resources>

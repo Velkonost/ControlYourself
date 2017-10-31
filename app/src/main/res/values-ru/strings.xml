@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tap_to_remove">Нажмите еще раз чтобы удалить</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="remove">Удалить</string>
+
+    <string name="h">ч </string>
+    <string name="m">м </string>
+
+    <string name="installed_apps_tab">Все</string>
+    <string name="customized_apps_tab">Настроенные</string>
+</resources>

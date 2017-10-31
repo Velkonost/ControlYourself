@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white_text">#FFFFFF</color>
+    <color name="placeholder_light_color">#AAAAAA</color>
+    <color name="divider_dark_color">#333333</color>
+    <color name="divider_light_grey_color">#DDDDDD</color>
+    <color name="divider_red_color">#FF3322</color>
+    <color name="black_opacity_66">#AA000000</color>
+    <color name="movies_dark_divider_color">#222222</color>
+    <color name="movies_light_divider_color">#CCCCCC</color>
+    <color name="movies_highlight_divider_color">#FFCC55</color>
+    <color name="titles_background_color">#222222</color>
+</resources>
