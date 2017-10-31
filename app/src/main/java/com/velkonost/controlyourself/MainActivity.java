@@ -167,12 +167,22 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            appsIconsList.add(icon);
-            appsTitlesList.add(pm.getApplicationLabel(packageInfo).toString());
-            appsPackagesNamesList.add(packageInfo.packageName);
+            if (
+                    !packageInfo.packageName.contains("htc")
+                            && !packageInfo.packageName.contains("android")
+                            && !packageInfo.packageName.contains("com.mediatek")
+                            && !packageInfo.packageName.contains("com.google.android")
+                            && !packageInfo.packageName.contains("com.longcheer")
+                            && !packageInfo.packageName.contains("com.futuredial")
+                            && !packageInfo.packageName.contains("com.fw")
+                    ) {
+                appsIconsList.add(icon);
+                appsTitlesList.add(pm.getApplicationLabel(packageInfo).toString());
+                appsPackagesNamesList.add(packageInfo.packageName);
+            }
         }
 
-        Log.i("KEKE", packages.toString());
+        Log.i("KEKE", appsPackagesNamesList.toString());
     }
 
 
