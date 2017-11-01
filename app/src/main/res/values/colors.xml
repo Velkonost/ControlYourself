@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white_text">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="placeholder_light_color">#AAAAAA</color>
     <color name="divider_dark_color">#333333</color>
     <color name="divider_light_grey_color">#DDDDDD</color>
@@ -13,4 +14,13 @@
     <color name="movies_light_divider_color">#CCCCCC</color>
     <color name="movies_highlight_divider_color">#FFCC55</color>
     <color name="titles_background_color">#222222</color>
+
+    <color name="theme_light_blue">#187a6a</color>
+    <color name="theme_pink">#f48fb1</color>
+    <color name="theme_ultra_light_grey">#fcfcfe</color>
+    <color name="theme_sand">#feedbc</color>
+    <color name="theme_grey">#cdd5e4</color>
+    <color name="theme_semi_grey">#783f3f3f</color>
+
+
 </resources>

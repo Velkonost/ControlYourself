@@ -4,13 +4,18 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Velkonost
@@ -29,7 +34,7 @@ public class BackgroundAlarm extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         mContext = context;
 
         packages = new ArrayList<>();
@@ -49,11 +54,17 @@ public class BackgroundAlarm extends BroadcastReceiver {
             }
         }
 
-        test();
+        Timer timer  =  new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                checkLimits();
+            }
+        }, 2000, 3000);
     }
 
-    private void test() {
-        Log.i(TAG, "method called");
+    private void checkLimits() {
+        mDBHelper.updateCurrentDay();
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> pids = am.getRunningAppProcesses();
         int processId = 0;
@@ -66,9 +77,22 @@ public class BackgroundAlarm extends BroadcastReceiver {
 
                 if (applicationWasteTime > applicationMaxTime) {
                     processId = info.pid;
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+
+                    Intent startMain = new Intent(mContext, AppBlockedActivity.class);
                     startMain.addCategory(Intent.CATEGORY_HOME);
                     startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        Drawable icon = mContext.getPackageManager().getApplicationIcon(packages.get(applicationIndex));
+                        Bitmap bitmap = ((BitmapDrawable) icon).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] b = baos.toByteArray();
+
+                        startMain.putExtra("icon", b);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
                     mContext.startActivity(startMain);
 
                     am.killBackgroundProcesses(info.processName);

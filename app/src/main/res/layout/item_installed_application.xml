@@ -1,18 +1,19 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/grid_item_height">
+    android:layout_height="96dp"
+    android:layout_margin="1dp">
 
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#AAdddddd"/>
+        android:background="@color/theme_semi_grey"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -46,7 +47,6 @@
             android:textColor="@color/white_text"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="123"
             />
     </RelativeLayout>
 

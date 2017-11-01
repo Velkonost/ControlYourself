@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Control Yourself</string>
+    <string name="app_name">SelfControl</string>
     <string name="tap_to_remove">Tap 1 more time to remove</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -8,6 +8,10 @@
     <string name="m">m </string>
     <string name="installed_apps_tab">All</string>
     <string name="customized_apps_tab">Customized</string>
+    <string name="search_hint">search…</string>
+    <string name="app_blocked_go_settings">Change settings</string>
+    <string name="app_blocked_warn">Access to this app blocked</string>
+
 
 
 </resources>

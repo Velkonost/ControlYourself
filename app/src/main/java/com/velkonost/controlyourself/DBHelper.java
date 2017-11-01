@@ -9,8 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author Velkonost
@@ -43,6 +47,49 @@ public class DBHelper extends SQLiteOpenHelper {
         insertMetaCurrentDay(db);
     }
 
+    void updateCurrentDay() {
+        Date currentDay = Calendar.getInstance().getTime();
+        Date previousDay = currentDay;
+
+        Cursor cursor = this.getWritableDatabase()
+                .rawQuery("select * from " + TABLE_PREFIX + META_DATA + " WHERE meta_key = ?", new String[]{"current_day"});
+
+        if (cursor.moveToFirst()) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss zzzz yyyy", Locale.US);
+            try {
+                previousDay = dateFormat.parse(cursor.getString(cursor.getColumnIndex("meta_value")));
+                if (currentDay.getTime() - previousDay.getTime() >= 86400000) {
+                    String startOfCurrentDay = String.valueOf(getStartOfDay(currentDay));
+                    ContentValues cvColumn = new ContentValues();
+                    cvColumn.put("meta_value", startOfCurrentDay);
+
+                    this.getWritableDatabase().update(TABLE_PREFIX + META_DATA, cvColumn, "meta_key = ?",
+                            new String[]{"current_day"});
+                    resetAllApplicationsWasteTime();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void resetAllApplicationsWasteTime() {
+        ContentValues cvColumn = new ContentValues();
+        cvColumn.put("waste_time", 0);
+        this.getWritableDatabase().update(TABLE_PREFIX + APPLICATIONS, cvColumn, null, null);
+    }
+
+    private Date getStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
     private void insertMetaCurrentDay(SQLiteDatabase db) {
         if (db.query(TABLE_PREFIX + META_DATA,
                 null,
@@ -51,7 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 null, null, null).getCount() == 0) {
             ContentValues cvColumn = new ContentValues();
             cvColumn.put("meta_key", "current_day");
-            cvColumn.put("meta_value", String.valueOf(Calendar.getInstance().getTime()));
+            cvColumn.put("meta_value", String.valueOf(getStartOfDay(Calendar.getInstance().getTime())));
             db.insert(TABLE_PREFIX + META_DATA, null, cvColumn);
         }
     }
@@ -76,15 +123,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     new String[]{applicationPackage});
         }
     }
-
-    public Cursor getApplicationByPackageName (String packageName) {
-        return this.getWritableDatabase().query(TABLE_PREFIX + APPLICATIONS,
-                null,
-                "application = ?",
-                new String[] {packageName},
-                null, null, null);
-    }
-
 
 
     private void createMetaDataTable(SQLiteDatabase db) {
@@ -118,7 +156,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (c.moveToFirst()) {
             int wasteTimeIndex = c.getColumnIndex("waste_time");
-            long wasteTime =  c.getLong(wasteTimeIndex) + 60;
+            long wasteTime =  c.getLong(wasteTimeIndex) + 3;
             c.close();
 
             ContentValues cvColumn = new ContentValues();

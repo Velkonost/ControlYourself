@@ -10,4 +10,8 @@
 
     <string name="installed_apps_tab">Все</string>
     <string name="customized_apps_tab">Настроенные</string>
+
+    <string name="search_hint">поиск…</string>
+    <string name="app_blocked_go_settings">Управление приложениями</string>
+    <string name="app_blocked_warn">Доступ к этому приложению заблокирован</string>
 </resources>

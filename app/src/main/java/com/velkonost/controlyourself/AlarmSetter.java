@@ -22,7 +22,7 @@ public class AlarmSetter extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intentNotification, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 60000, pendingIntent); // Millisec * Second * Minute
+        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 3000, pendingIntent);
     }
 }
 

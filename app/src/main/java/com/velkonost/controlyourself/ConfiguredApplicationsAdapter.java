@@ -3,26 +3,30 @@ package com.velkonost.controlyourself;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * @author Velkonost
  */
 
-public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<ConfiguredApplicationsAdapter.ViewHolder> {
+class ConfiguredApplicationsAdapter
+        extends RecyclerView.Adapter<ConfiguredApplicationsAdapter.ViewHolder> {
 
     private Context context;
 
@@ -52,6 +56,11 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
         this.appsIconsList = appsIconsList;
         this.appsTitlesList = appsTitlesList;
         this.appsPackagesNamesList = appsPackagesNamesList;
+        filterApplications(
+                appsIconsList,
+                appsTitlesList,
+                appsPackagesNamesList
+        );
 
         packages = new ArrayList<>();
         wasteTime = new ArrayList<>();
@@ -99,33 +108,69 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
     public void onBindViewHolder(ConfiguredApplicationsAdapter.ViewHolder holder, final int position) {
 
         final int index = appsPackagesNamesList.indexOf(packages.get(position));
-        holder.icon.setImageDrawable(appsIconsList.get(index));
-        holder.title.setText(appsTitlesList.get(index));
+        Log.i(String.valueOf(index), packages.get(position));
+        if (index == -1) {
+            holder.wrap.setVisibility(View.INVISIBLE);
+            holder.wrap.setLayoutParams(new FrameLayout.LayoutParams(0, 0));
+        }
+        else {
+            holder.wrap.setVisibility(View.VISIBLE);
+            holder.wrap.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        String applicationWasteTime = formatApplicationWasteTime(wasteTime.get(position));
-        String applicationMaxTime = formatApplicationMaxTime(maxTime.get(position));
+            holder.icon.setImageDrawable(appsIconsList.get(index));
+            holder.title.setText(appsTitlesList.get(index));
 
-        holder.wasteTime.setText(applicationWasteTime);
-        holder.maxTime.setText(applicationMaxTime);
+            String applicationWasteTime = formatApplicationWasteTime(
+                    Math.min(wasteTime.get(position), maxTime.get(position))
+            );
+            String applicationMaxTime = formatApplicationMaxTime(maxTime.get(position));
 
-        holder.wrap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertTimePicker(appsPackagesNamesList.get(index), position);
-            }
-        });
+            holder.wasteTime.setText(applicationWasteTime);
+            holder.wasteTime.setTypeface(Typeface.createFromAsset(
+                    context.getAssets(),
+                    String.format(Locale.US, "fonts/%s", "helvetica_neue_ultralight.ttf"))
+            );
+
+            holder.maxTime.setText(applicationMaxTime);
+            holder.maxTime.setTypeface(Typeface.createFromAsset(
+                    context.getAssets(),
+                    String.format(Locale.US, "fonts/%s", "helvetica_neue_ultralight.ttf"))
+            );
+
+
+            holder.wrap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertTimePicker(appsPackagesNamesList.get(index), position);
+                }
+            });
+        }
+
+    }
+
+    void filterApplications(
+            ArrayList<Drawable> filteredAppsIconsList,
+            ArrayList<String> filteredAppsTitlesList,
+            ArrayList<String> filteredAppsPackagesNamesList
+
+    ) {
+        appsIconsList = filteredAppsIconsList;
+        appsPackagesNamesList = filteredAppsPackagesNamesList;
+        appsTitlesList = filteredAppsTitlesList;
+
+        updateAdapter();
     }
 
     private String formatApplicationWasteTime(long applicationWasteTime) {
         long wasteHours = applicationWasteTime / 3600;
         long wasteMinutes = (applicationWasteTime - wasteHours * 3600) / 60;
-        return wasteHours + context.getString(R.string.h) + wasteMinutes + context.getString(R.string.m);
+        return wasteHours + context.getString(R.string.h) + " " + wasteMinutes + context.getString(R.string.m);
     }
 
     private String formatApplicationMaxTime(long applicationMaxTime) {
         long maxHours = applicationMaxTime / 3600;
         long maxMinutes = (applicationMaxTime - maxHours * 3600) / 60;
-        return maxHours + context.getString(R.string.h) + maxMinutes + context.getString(R.string.m);
+        return maxHours + context.getString(R.string.h) + " " + maxMinutes + context.getString(R.string.m);
     }
 
     @Override
@@ -135,7 +180,7 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout wrap;
+        FrameLayout wrap;
 
         ImageView icon;
 
@@ -146,7 +191,7 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
         ViewHolder(final View itemView) {
             super(itemView);
 
-            wrap = (RelativeLayout) itemView.findViewById(R.id.wrap);
+            wrap = (FrameLayout) itemView.findViewById(R.id.wrap);
 
             icon = (ImageView) itemView.findViewById(R.id.app_icon);
             title = (TextView) itemView.findViewById(R.id.app_title);
@@ -169,6 +214,9 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
         final TimePicker myTimePicker = (TimePicker) view
                 .findViewById(R.id.myTimePicker);
 
+        myTimePicker.setCurrentHour(1);
+        myTimePicker.setCurrentMinute(30);
+
         myTimePicker.setIs24HourView(true);
         final boolean[] allowRemoveApplication = {false};
         final AlertDialog alertDialog = initializeAlertDialog(view, appsTitlesList.get(appsPackagesNamesList.indexOf(applicationName)));
@@ -181,13 +229,21 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
                 Button negativeBtn = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
                 Button neutralBtn = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
 
+                positiveBtn.setTextColor(context.getResources().getColor(R.color.theme_light_blue));
+                negativeBtn.setTextColor(context.getResources().getColor(R.color.theme_light_blue));
+                neutralBtn.setTextColor(context.getResources().getColor(R.color.theme_pink));
+
+                positiveBtn.setTextSize(16);
+                negativeBtn.setTextSize(16);
+                neutralBtn.setTextSize(16);
+
                 positiveBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         allowRemoveApplication[0] = false;
                         long applicationMaxTime = myTimePicker.getCurrentHour() * 3600 + myTimePicker.getCurrentMinute() * 60;
 
-                        updateConfiguredApplication(positionIndex, applicationMaxTime);
+                        activity.updateConfiguredApplication(positionIndex, applicationMaxTime);
                         mDBHelper.updateApplicationTime(applicationName, applicationMaxTime);
 
                         alertDialog.cancel();
@@ -225,9 +281,15 @@ public class ConfiguredApplicationsAdapter extends RecyclerView.Adapter<Configur
     }
 
     private AlertDialog initializeAlertDialog(View view, String applicationName) {
+        TextView alertTitle = new TextView(context);
+        alertTitle.setText(applicationName);
+        alertTitle.setTextColor(context.getResources().getColor(R.color.theme_light_blue));
+        alertTitle.setTextSize(24);
+        alertTitle.setPadding(25, 25, 10, 10);
+
         return new AlertDialog.Builder(context)
                 .setView(view)
-                .setTitle(applicationName)
+                .setCustomTitle(alertTitle)
                 .setPositiveButton(R.string.ok, null) //Set to null. We override the onclick
                 .setNeutralButton(R.string.remove, null)
                 .setNegativeButton(R.string.cancel, null)

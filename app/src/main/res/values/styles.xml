@@ -1,12 +1,28 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme"
-           parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:typeface">monospace</item>
+
     </style>
 
+
+    <style name="MaterialSearchViewStyle">
+        <item name="searchBackground">@color/theme_light_blue</item>
+        <item name="android:textColor">@color/white_text</item>
+        <item name="android:textColorHint">@color/white_text</item>
+
+        <item name="searchCloseIcon">@drawable/ic_action_navigation_close_inverted</item>
+
+        <!-- Change up icon -->
+        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back_inverted</item>
+
+    </style>
 </resources>
